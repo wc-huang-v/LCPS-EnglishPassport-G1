@@ -97,7 +97,7 @@
   <audio id="audioPlayer"></audio>
 
   <script>
-   // 42 句資料結構 (副檔名已全數修正為 .m4a)
+    // 42 句資料結構 (副檔名已全數修正為 .m4a)
     const data = [
       { week: 1, p: 4, items: [
         { page: 1, text: "Good job.", file: "01.m4a" },
@@ -170,6 +170,64 @@
         { page: 55, text: "Clap your hands.", file: "42.m4a" }
       ]}
     ];
+
+    const contentDiv = document.getElementById('content');
+    const player = document.getElementById('audioPlayer');
+    let activeBtn = null;
+
+    // 動態渲染所有單元
+    data.forEach(u => {
+      const card = document.createElement('div');
+      card.className = 'unit-card';
+      card.id = `w${u.week}`;
+      
+      let html = `<div class="unit-header">
+                    <span>Week ${u.week}</span>
+                    <span style="font-size:0.8rem; font-weight:normal;">Review P.${u.p}</span>
+                  </div>`;
+      
+      u.items.forEach(item => {
+        html += `
+          <button class="btn-item" id="p${item.page}" onclick="playAudio('audio/${item.file}', this)">
+            <span><span class="page-tag">P.${item.page}</span>${item.text}</span>
+            <span>🔊</span>
+          </button>
+        `;
+      });
+
+      card.innerHTML = html;
+      contentDiv.appendChild(card);
+    });
+
+    function playAudio(url, elem) {
+      if (activeBtn) activeBtn.classList.remove('playing');
+      player.src = url;
+      player.play().catch(e => console.log("需使用者主動互動方可播放"));
+      elem.classList.add('playing');
+      activeBtn = elem;
+
+      player.onended = () => {
+        elem.classList.remove('playing');
+      };
+    }
+
+    // 依據網址 Hash (#p1 或 #w1) 自動捲動並高亮
+    window.onload = () => {
+      const hash = window.location.hash;
+      if (hash) {
+        const target = document.querySelector(hash);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (target.classList.contains('btn-item')) {
+            target.classList.add('playing');
+            // 若瀏覽器允許亦可直接嘗試播放：
+            // target.click();
+          } else if (target.classList.contains('unit-card')) {
+            target.classList.add('highlight');
+          }
+        }
+      }
+    };
   </script>
 </body>
 </html>
