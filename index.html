@@ -1,233 +1,73 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>一年級英語護照發音專區</title>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --active: #fef08a;
-    }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background-color: var(--bg);
-      margin: 0;
-      padding: 12px;
-      color: #1e293b;
-    }
-    header {
-      text-align: center;
-      padding: 10px 0 16px;
-    }
-    h1 {
-      font-size: 1.4rem;
-      margin: 0 0 4px;
-      color: #1e3a8a;
-    }
-    .sub {
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-    .unit-card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 14px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
-      border: 1px solid #e2e8f0;
-      scroll-margin-top: 10px;
-    }
-    .unit-card.highlight {
-      border: 2px solid var(--primary);
-      background-color: #eff6ff;
-    }
-    .unit-header {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-    .btn-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      background: #ffffff;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 8px;
-      padding: 10px 12px;
-      margin-bottom: 6px;
-      font-size: 1.05rem;
-      font-weight: 600;
-      cursor: pointer;
-      scroll-margin-top: 20px;
-      box-sizing: border-box;
-    }
-    .btn-item:active {
-      transform: scale(0.98);
-    }
-    .btn-item.playing {
-      background-color: var(--active);
-      border-color: #eab308;
-    }
-    .page-tag {
-      font-size: 0.75rem;
-      background: #e2e8f0;
-      color: #475569;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-right: 6px;
-    }
-  </style>
-</head>
-<body>
-
-  <header>
-    <h1>English Passport G1</h1>
-    <div class="sub">點選句子聽發音，跟著老師唸唸看！</div>
-  </header>
-
-  <div id="content"></div>
-
-  <audio id="audioPlayer"></audio>
-
-  <script>
-    // 42 句資料結構 (對應手冊 14 週)
+// 42 句資料結構 (副檔名已全數修正為 .m4a)
     const data = [
       { week: 1, p: 4, items: [
-        { page: 1, text: "Good job.", file: "01.mp3" },
-        { page: 2, text: "Stand up.", file: "02.mp3" },
-        { page: 3, text: "Sit down.", file: "03.mp3" }
+        { page: 1, text: "Good job.", file: "01.m4a" },
+        { page: 2, text: "Stand up.", file: "02.m4a" },
+        { page: 3, text: "Sit down.", file: "03.m4a" }
       ]},
       { week: 2, p: 8, items: [
-        { page: 5, text: "This is a pen.", file: "04.mp3" },
-        { page: 6, text: "This is a pencil.", file: "05.mp3" },
-        { page: 7, text: "This is an eraser.", file: "06.mp3" }
+        { page: 5, text: "This is a pen.", file: "04.m4a" },
+        { page: 6, text: "This is a pencil.", file: "05.m4a" },
+        { page: 7, text: "This is an eraser.", file: "06.m4a" }
       ]},
       { week: 3, p: 12, items: [
-        { page: 9, text: "This is a book.", file: "07.mp3" },
-        { page: 10, text: "This is a table.", file: "08.mp3" },
-        { page: 11, text: "This is a chair.", file: "09.mp3" }
+        { page: 9, text: "This is a book.", file: "07.m4a" },
+        { page: 10, text: "This is a table.", file: "08.m4a" },
+        { page: 11, text: "This is a chair.", file: "09.m4a" }
       ]},
       { week: 4, p: 16, items: [
-        { page: 13, text: "It is hot.", file: "10.mp3" },
-        { page: 14, text: "It is cold.", file: "11.mp3" },
-        { page: 15, text: "It is rainy.", file: "12.mp3" }
+        { page: 13, text: "It is hot.", file: "10.m4a" },
+        { page: 14, text: "It is cold.", file: "11.m4a" },
+        { page: 15, text: "It is rainy.", file: "12.m4a" }
       ]},
       { week: 5, p: 20, items: [
-        { page: 17, text: "It is sunny.", file: "13.mp3" },
-        { page: 18, text: "It is cloudy.", file: "14.mp3" },
-        { page: 19, text: "It is snowy.", file: "15.mp3" }
+        { page: 17, text: "It is sunny.", file: "13.m4a" },
+        { page: 18, text: "It is cloudy.", file: "14.m4a" },
+        { page: 19, text: "It is snowy.", file: "15.m4a" }
       ]},
       { week: 6, p: 24, items: [
-        { page: 21, text: "Let's go.", file: "16.mp3" },
-        { page: 22, text: "Let's play.", file: "17.mp3" },
-        { page: 23, text: "Let's draw.", file: "18.mp3" }
+        { page: 21, text: "Let's go.", file: "16.m4a" },
+        { page: 22, text: "Let's play.", file: "17.m4a" },
+        { page: 23, text: "Let's draw.", file: "18.m4a" }
       ]},
       { week: 7, p: 28, items: [
-        { page: 25, text: "Happy New Year.", file: "19.mp3" },
-        { page: 26, text: "Happy birthday.", file: "20.mp3" },
-        { page: 27, text: "Happy Mother's Day.", file: "21.mp3" }
+        { page: 25, text: "Happy New Year.", file: "19.m4a" },
+        { page: 26, text: "Happy birthday.", file: "20.m4a" },
+        { page: 27, text: "Happy Mother's Day.", file: "21.m4a" }
       ]},
       { week: 8, p: 32, items: [
-        { page: 29, text: "I like ice cream.", file: "22.mp3" },
-        { page: 30, text: "I like chocolate.", file: "23.mp3" },
-        { page: 31, text: "I like cakes.", file: "24.mp3" }
+        { page: 29, text: "I like ice cream.", file: "22.m4a" },
+        { page: 30, text: "I like chocolate.", file: "23.m4a" },
+        { page: 31, text: "I like cakes.", file: "24.m4a" }
       ]},
       { week: 9, p: 36, items: [
-        { page: 33, text: "I love Grandpa.", file: "25.mp3" },
-        { page: 34, text: "I love Grandma.", file: "26.mp3" },
-        { page: 35, text: "I love my family.", file: "27.mp3" }
+        { page: 33, text: "I love Grandpa.", file: "25.m4a" },
+        { page: 34, text: "I love Grandma.", file: "26.m4a" },
+        { page: 35, text: "I love my family.", file: "27.m4a" }
       ]},
       { week: 10, p: 40, items: [
-        { page: 37, text: "See you.", file: "28.mp3" },
-        { page: 38, text: "Help me!", file: "29.mp3" },
-        { page: 39, text: "Of course.", file: "30.mp3" }
+        { page: 37, text: "See you.", file: "28.m4a" },
+        { page: 38, text: "Help me!", file: "29.m4a" },
+        { page: 39, text: "Of course.", file: "30.m4a" }
       ]},
       { week: 11, p: 44, items: [
-        { page: 41, text: "What happened?", file: "31.mp3" },
-        { page: 42, text: "Hold on.", file: "32.mp3" },
-        { page: 43, text: "Try again.", file: "33.mp3" }
+        { page: 41, text: "What happened?", file: "31.m4a" },
+        { page: 42, text: "Hold on.", file: "32.m4a" },
+        { page: 43, text: "Try again.", file: "33.m4a" }
       ]},
       { week: 12, p: 48, items: [
-        { page: 45, text: "What's your name?", file: "34.mp3" },
-        { page: 46, text: "What color is it?", file: "35.mp3" },
-        { page: 47, text: "How many?", file: "36.mp3" }
+        { page: 45, text: "What's your name?", file: "34.m4a" },
+        { page: 46, text: "What color is it?", file: "35.m4a" },
+        { page: 47, text: "How many?", file: "36.m4a" }
       ]},
       { week: 13, p: 52, items: [
-        { page: 49, text: "Touch your head.", file: "37.mp3" },
-        { page: 50, text: "Touch your nose.", file: "38.mp3" },
-        { page: 51, text: "Touch your mouth.", file: "39.mp3" }
+        { page: 49, text: "Touch your head.", file: "37.m4a" },
+        { page: 50, text: "Touch your nose.", file: "38.m4a" },
+        { page: 51, text: "Touch your mouth.", file: "39.m4a" }
       ]},
       { week: 14, p: 56, items: [
-        { page: 53, text: "Touch your ears.", file: "40.mp3" },
-        { page: 54, text: "Touch your eyes.", file: "41.mp3" },
-        { page: 55, text: "Clap your hands.", file: "42.mp3" }
+        { page: 53, text: "Touch your ears.", file: "40.m4a" },
+        { page: 54, text: "Touch your eyes.", file: "41.m4a" },
+        { page: 55, text: "Clap your hands.", file: "42.m4a" }
       ]}
     ];
-
-    const contentDiv = document.getElementById('content');
-    const player = document.getElementById('audioPlayer');
-    let activeBtn = null;
-
-    // 動態渲染所有單元
-    data.forEach(u => {
-      const card = document.createElement('div');
-      card.className = 'unit-card';
-      card.id = `w${u.week}`;
-      
-      let html = `<div class="unit-header">
-                    <span>Week ${u.week}</span>
-                    <span style="font-size:0.8rem; font-weight:normal;">Review P.${u.p}</span>
-                  </div>`;
-      
-      u.items.forEach(item => {
-        html += `
-          <button class="btn-item" id="p${item.page}" onclick="playAudio('audio/${item.file}', this)">
-            <span><span class="page-tag">P.${item.page}</span>${item.text}</span>
-            <span>🔊</span>
-          </button>
-        `;
-      });
-
-      card.innerHTML = html;
-      contentDiv.appendChild(card);
-    });
-
-    function playAudio(url, elem) {
-      if (activeBtn) activeBtn.classList.remove('playing');
-      player.src = url;
-      player.play().catch(e => console.log("需使用者主動互動方可播放"));
-      elem.classList.add('playing');
-      activeBtn = elem;
-
-      player.onended = () => {
-        elem.classList.remove('playing');
-      };
-    }
-
-    // 依據網址 Hash (#p1 或 #w1) 自動捲動並高亮
-    window.onload = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        const target = document.querySelector(hash);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          if (target.classList.contains('btn-item')) {
-            target.classList.add('playing');
-            // 若瀏覽器允許亦可直接嘗試播放：
-            // target.click();
-          } else if (target.classList.contains('unit-card')) {
-            target.classList.add('highlight');
-          }
-        }
-      }
-    };
-  </script>
-</body>
-</html>
